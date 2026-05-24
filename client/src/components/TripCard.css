@@ -1,0 +1,66 @@
+.trip-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+.trip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+.trip-card-image {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+}
+
+.trip-card-content {
+  padding: 16px;
+}
+
+.trip-card-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.trip-card-dates {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.trip-card-days {
+  color: var(--accent);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.trip-card-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  color: var(--text-primary);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.trip-card:hover .trip-card-delete {
+  opacity: 1;
+}
+
+.trip-card-delete:hover {
+  background: var(--danger);
+}

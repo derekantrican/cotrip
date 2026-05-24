@@ -1,0 +1,98 @@
+.activity-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s;
+  border-left: 4px solid var(--cat-other);
+  box-shadow: var(--shadow);
+}
+
+.activity-card:hover {
+  transform: translateX(2px);
+}
+
+.activity-card.category-transportation { border-left-color: var(--cat-transportation); }
+.activity-card.category-hotel { border-left-color: var(--cat-hotel); }
+.activity-card.category-sight-seeing { border-left-color: var(--cat-sight-seeing); }
+.activity-card.category-food { border-left-color: var(--cat-food); }
+
+.activity-card-image {
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+}
+
+.activity-card-body {
+  padding: 14px 16px;
+}
+
+.activity-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.activity-category {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.activity-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.activity-description {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #222;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.activity-description p {
+  margin-bottom: 8px;
+}
+
+.activity-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #222;
+}
+
+.btn-sm {
+  background: var(--bg-elevated);
+  border: 1px solid #333;
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+
+.btn-sm:hover {
+  background: #333;
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+}
