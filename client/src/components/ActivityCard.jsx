@@ -47,6 +47,9 @@ function ActivityCard({ activity, onEdit, onDelete, onMove }) {
             {activity.link && (
               <a href={activity.link} target="_blank" rel="noopener noreferrer" className="btn-sm btn-open" onClick={e => e.stopPropagation()}>Open</a>
             )}
+            {activity.map_link && (
+              <a href={activity.map_link} target="_blank" rel="noopener noreferrer" className="btn-sm btn-map" onClick={e => e.stopPropagation()}>📍 Map</a>
+            )}
             <button className="btn-sm" onClick={(e) => { e.stopPropagation(); onMove(); }}>Move</button>
             <button className="btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>Edit</button>
             <button className="btn-sm btn-danger" onClick={(e) => { e.stopPropagation(); onDelete(); }}>Delete</button>

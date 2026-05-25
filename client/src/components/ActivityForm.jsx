@@ -18,6 +18,7 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
   const [description, setDescription] = useState(activity?.description || '');
   const [coverImage, setCoverImage] = useState(activity?.cover_image || '');
   const [link, setLink] = useState(activity?.link || '');
+  const [mapLink, setMapLink] = useState(activity?.map_link || '');
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -32,6 +33,7 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
       end_date: endDate || null,
       cover_image: coverImage || null,
       link: link || null,
+      map_link: mapLink || null,
     });
   }
 
@@ -75,6 +77,10 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
           <label>
             Link
             <input type="url" value={link} onChange={e => setLink(e.target.value)} placeholder="https://mail.google.com/..." />
+          </label>
+          <label>
+            Google Maps Link
+            <input type="url" value={mapLink} onChange={e => setMapLink(e.target.value)} placeholder="https://maps.google.com/..." />
           </label>
           <div className="modal-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>

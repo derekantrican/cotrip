@@ -47,6 +47,7 @@ async function getDb() {
       category TEXT DEFAULT 'other',
       cover_image TEXT,
       link TEXT,
+      map_link TEXT,
       sort_order INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
@@ -56,6 +57,9 @@ async function getDb() {
   const activityColumns = all('PRAGMA table_info(activities)');
   if (!activityColumns.some((column) => column.name === 'end_date')) {
     db.run('ALTER TABLE activities ADD COLUMN end_date TEXT');
+  }
+  if (!activityColumns.some((column) => column.name === 'map_link')) {
+    db.run('ALTER TABLE activities ADD COLUMN map_link TEXT');
   }
 
   db.run(`
