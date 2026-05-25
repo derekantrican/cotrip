@@ -199,6 +199,7 @@ function TripView() {
           <TimelineView
             days={days}
             getActivities={getActivitiesForDate}
+            allActivities={trip.activities}
             onAddActivity={(date) => { setCurrentDayIndex(days.indexOf(date)); setShowActivityForm(true); }}
             onEditActivity={setEditingActivity}
             onDeleteActivity={handleDeleteActivity}
@@ -218,6 +219,7 @@ function TripView() {
           <FullTripView
             days={days}
             getActivities={getActivitiesForDate}
+            allActivities={trip.activities}
             onSelectDay={(i) => { setCurrentDayIndex(i); setViewMode('day'); }}
           />
         )}
