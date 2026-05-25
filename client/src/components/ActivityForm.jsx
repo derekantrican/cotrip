@@ -14,6 +14,7 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
   const [startTime, setStartTime] = useState(activity?.start_time || '');
   const [endTime, setEndTime] = useState(activity?.end_time || '');
   const [category, setCategory] = useState(activity?.category || 'other');
+  const [endDate, setEndDate] = useState(activity?.end_date || '');
   const [description, setDescription] = useState(activity?.description || '');
   const [coverImage, setCoverImage] = useState(activity?.cover_image || '');
   const [link, setLink] = useState(activity?.link || '');
@@ -28,6 +29,7 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
       title,
       description: description || null,
       category,
+      end_date: endDate || null,
       cover_image: coverImage || null,
       link: link || null,
     });
@@ -57,6 +59,10 @@ function ActivityForm({ tripId, activity, date, onSubmit, onClose }) {
             <select value={category} onChange={e => setCategory(e.target.value)}>
               {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
+          </label>
+          <label>
+            End Date <span style={{fontSize: '0.8rem', color: 'var(--text-muted)'}}>(for multi-day activities)</span>
+            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
           </label>
           <label>
             Description (Markdown)

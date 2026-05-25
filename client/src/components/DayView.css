@@ -40,3 +40,18 @@
     padding: 16px;
   }
 }
+
+.day-hotel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.day-hotel-top {
+  margin-bottom: 16px;
+}
+
+.day-hotel-bottom {
+  margin-top: 16px;
+}
+

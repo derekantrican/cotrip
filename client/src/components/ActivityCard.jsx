@@ -10,7 +10,7 @@ const CATEGORY_LABELS = {
   other: '📌 Other',
 };
 
-function ActivityCard({ activity, onEdit, onDelete }) {
+function ActivityCard({ activity, onEdit, onDelete, onMove }) {
   const [expanded, setExpanded] = useState(false);
 
   function formatTime(time) {
@@ -42,13 +42,12 @@ function ActivityCard({ activity, onEdit, onDelete }) {
             <MarkdownRenderer content={activity.description} />
           </div>
         )}
-        {expanded && activity.link && (
-          <a href={activity.link} target="_blank" rel="noopener noreferrer" className="activity-link" onClick={e => e.stopPropagation()}>
-            Open Link →
-          </a>
-        )}
         {expanded && (
           <div className="activity-actions">
+            {activity.link && (
+              <a href={activity.link} target="_blank" rel="noopener noreferrer" className="btn-sm btn-open" onClick={e => e.stopPropagation()}>Open</a>
+            )}
+            <button className="btn-sm" onClick={(e) => { e.stopPropagation(); onMove(); }}>Move</button>
             <button className="btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>Edit</button>
             <button className="btn-sm btn-danger" onClick={(e) => { e.stopPropagation(); onDelete(); }}>Delete</button>
           </div>

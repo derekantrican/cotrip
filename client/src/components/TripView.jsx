@@ -17,6 +17,7 @@ function TripView() {
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [showActivityForm, setShowActivityForm] = useState(false);
   const [editingActivity, setEditingActivity] = useState(null);
+  const [movingActivity, setMovingActivity] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -28,6 +29,23 @@ function TripView() {
   useEffect(() => {
     loadTrip();
   }, [id]);
+
+  // Auto-refresh trip data every 3 seconds for cross-device sync
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshTrip();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [id]);
+
+  async function refreshTrip() {
+    try {
+      const data = await api.getTrip(id);
+      setTrip(data);
+    } catch (err) {
+      // Silent fail on background refresh
+    }
+  }
 
   async function loadTrip() {
     try {
@@ -64,7 +82,7 @@ function TripView() {
 
   function getActivitiesForDate(date) {
     if (!trip || !trip.activities) return [];
-    return trip.activities.filter(a => a.date === date);
+    return trip.activities.filter(a => a.date === date || (a.end_date && a.date <= date && a.end_date >= date));
   }
 
   async function handleCreateActivity(data) {
@@ -94,6 +112,16 @@ function TripView() {
       loadTrip();
     } catch (err) {
       console.error('Failed to delete activity:', err);
+    }
+  }
+
+  async function handleMoveActivity(activity, newDate) {
+    try {
+      await api.updateActivity(activity.id, { ...activity, date: newDate });
+      setMovingActivity(null);
+      loadTrip();
+    } catch (err) {
+      console.error('Failed to move activity:', err);
     }
   }
 
@@ -127,7 +155,7 @@ function TripView() {
   return (
     <div className="trip-view">
       <header className="trip-view-header">
-        <button className="btn-back" onClick={() => navigate('/')}>← Trips</button>
+        <button className="btn-back" onClick={() => navigate('/?list')}>← Trips</button>
         <h1>{trip.title}</h1>
         {!isMobile && (
           <div className="view-mode-toggle">
@@ -158,10 +186,13 @@ function TripView() {
         {(isMobile || viewMode === 'day') && (
           <DayView
             date={currentDate}
+            days={days}
             activities={getActivitiesForDate(currentDate)}
+            allActivities={trip.activities}
             onAddActivity={() => setShowActivityForm(true)}
             onEditActivity={setEditingActivity}
             onDeleteActivity={handleDeleteActivity}
+            onMoveActivity={setMovingActivity}
           />
         )}
         {!isMobile && viewMode === 'timeline' && (
@@ -171,6 +202,7 @@ function TripView() {
             onAddActivity={(date) => { setCurrentDayIndex(days.indexOf(date)); setShowActivityForm(true); }}
             onEditActivity={setEditingActivity}
             onDeleteActivity={handleDeleteActivity}
+            onMoveActivity={setMovingActivity}
             currentDayIndex={currentDayIndex}
             onSelectDay={setCurrentDayIndex}
           />
@@ -207,6 +239,29 @@ function TripView() {
           onSubmit={handleUpdateActivity}
           onClose={() => setEditingActivity(null)}
         />
+      )}
+      {movingActivity && (
+        <div className="modal-overlay" onClick={() => setMovingActivity(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h2>Move Activity</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '16px' }}>Move "{movingActivity.title}" to:</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '300px', overflow: 'auto' }}>
+              {days.map((d, i) => (
+                <button
+                  key={d}
+                  className={`btn-sm ${d === movingActivity.date ? 'active' : ''}`}
+                  style={d === movingActivity.date ? { background: 'var(--accent)', color: 'white' } : {}}
+                  onClick={() => handleMoveActivity(movingActivity, d)}
+                >
+                  Day {i + 1} — {new Date(d + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                </button>
+              ))}
+            </div>
+            <div className="modal-actions" style={{ marginTop: '16px' }}>
+              <button className="btn-secondary" onClick={() => setMovingActivity(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

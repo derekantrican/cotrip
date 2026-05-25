@@ -9,13 +9,6 @@ function FullTripView({ days, getActivities, onSelectDay }) {
 
   return (
     <div className="calendar-view">
-      <div className="calendar-header">
-        {Array.from({ length: 7 }, (_, i) => (
-          <div key={i} className="calendar-header-cell">
-            {i < days.length ? `Day ${i + 1}` : ''}
-          </div>
-        ))}
-      </div>
       <div className="calendar-grid">
         {cells.map((cell, i) => {
           if (!cell) return <div key={i} className="calendar-cell empty" />;
@@ -28,12 +21,13 @@ function FullTripView({ days, getActivities, onSelectDay }) {
               <div className="calendar-cell-date">Day {cell.index + 1}</div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
               <div className="calendar-cell-activities">
-                {activities.slice(0, 3).map(a => (
+                {activities.slice(0, 5).map(a => (
                   <div key={a.id} className={`calendar-activity-dot category-${a.category}`}>
+                    {a.start_time && <span style={{opacity: 0.7, marginRight: '4px'}}>{a.start_time.slice(0,5)}</span>}
                     {a.title}
                   </div>
                 ))}
-                {activities.length > 3 && <span className="calendar-more">+{activities.length - 3}</span>}
+                {activities.length > 5 && <span className="calendar-more">+{activities.length - 5} more</span>}
               </div>
             </div>
           );

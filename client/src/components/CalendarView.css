@@ -3,13 +3,19 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
-.calendar-header {
+.calendar-timeblock .calendar-header {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
-  margin-bottom: 8px;
+  grid-template-columns: 40px repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 2;
+  padding-bottom: 4px;
 }
 
 .calendar-header-cell {
@@ -22,6 +28,104 @@
   letter-spacing: 0.5px;
 }
 
+.calendar-header-cell.time-gutter {
+  width: 40px;
+}
+
+.calendar-week-row {
+  display: grid;
+  grid-template-columns: 40px repeat(7, 1fr);
+  gap: 2px;
+  min-height: 300px;
+  flex: 1;
+  margin-bottom: 4px;
+}
+
+.calendar-time-gutter {
+  position: relative;
+  border-right: 1px solid #222;
+}
+
+.calendar-time-label {
+  position: absolute;
+  right: 4px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+}
+
+.calendar-day-col {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-day-col:hover:not(.empty) {
+  background: var(--bg-elevated);
+}
+
+.calendar-day-col.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.calendar-day-col.today {
+  border: 1px solid var(--accent);
+}
+
+.calendar-day-col-header {
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  border-bottom: 1px solid #222;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-hotel-badge {
+  font-size: 0.7rem;
+}
+
+.calendar-day-col-body {
+  position: relative;
+  flex: 1;
+}
+
+.calendar-event {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  border-radius: 3px;
+  padding: 2px 4px;
+  overflow: hidden;
+  min-height: 18px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.calendar-event:hover {
+  opacity: 1;
+  z-index: 1;
+}
+
+.calendar-event-title {
+  font-size: 0.65rem;
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* FullTripView styles (reuses some calendar classes) */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -33,7 +137,7 @@
   background: var(--bg-surface);
   border-radius: var(--radius);
   padding: 8px;
-  min-height: 80px;
+  min-height: 100px;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -60,18 +164,19 @@
 .calendar-cell-activities {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .calendar-activity-dot {
-  font-size: 0.7rem;
-  color: var(--text-muted);
+  font-size: 0.75rem;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 2px 4px;
-  border-radius: 3px;
-  border-left: 2px solid var(--cat-other);
+  padding: 3px 6px;
+  border-radius: 4px;
+  border-left: 3px solid var(--cat-other);
+  background: var(--bg-elevated);
 }
 
 .calendar-activity-dot.category-transportation { border-left-color: var(--cat-transportation); }
@@ -82,4 +187,5 @@
 .calendar-more {
   font-size: 0.7rem;
   color: var(--accent);
+  padding: 2px 6px;
 }

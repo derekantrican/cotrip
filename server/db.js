@@ -39,6 +39,7 @@ async function getDb() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       trip_id INTEGER NOT NULL,
       date TEXT NOT NULL,
+      end_date TEXT,
       start_time TEXT,
       end_time TEXT,
       title TEXT NOT NULL,
@@ -52,6 +53,11 @@ async function getDb() {
     )
   `);
 
+  const activityColumns = all('PRAGMA table_info(activities)');
+  if (!activityColumns.some((column) => column.name === 'end_date')) {
+    db.run('ALTER TABLE activities ADD COLUMN end_date TEXT');
+  }
+
   db.run(`
     CREATE TABLE IF NOT EXISTS settings (
       key TEXT PRIMARY KEY,
@@ -61,6 +67,8 @@ async function getDb() {
 
   // Insert default settings if not present
   db.run("INSERT OR IGNORE INTO settings (key, value) VALUES ('first_day_of_week', '\"sunday\"')");
+  db.run("INSERT OR IGNORE INTO settings (key, value) VALUES ('calendar_start_hour', '6')");
+  db.run("INSERT OR IGNORE INTO settings (key, value) VALUES ('calendar_end_hour', '24')");
 
   save();
   return db;

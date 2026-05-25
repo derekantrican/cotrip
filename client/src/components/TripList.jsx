@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api';
 import TripCard from './TripCard';
 import TripForm from './TripForm';
@@ -10,6 +10,7 @@ function TripList() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     loadTrips();
@@ -20,12 +21,14 @@ function TripList() {
       const data = await api.getTrips();
       setTrips(data);
 
-      // Auto-navigate to active trip
-      const today = new Date().toISOString().split('T')[0];
-      const activeTrip = data.find(t => t.start_date <= today && t.end_date >= today);
-      if (activeTrip) {
-        navigate(`/trip/${activeTrip.id}`);
-        return;
+      // Auto-navigate to active trip only on first visit (not when user clicked "back")
+      if (!searchParams.has('list')) {
+        const today = new Date().toISOString().split('T')[0];
+        const activeTrip = data.find(t => t.start_date <= today && t.end_date >= today);
+        if (activeTrip) {
+          navigate(`/trip/${activeTrip.id}`);
+          return;
+        }
       }
     } catch (err) {
       console.error('Failed to load trips:', err);

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import ActivityCard from './ActivityCard';
 import './TimelineView.css';
 
-function TimelineView({ days, getActivities, onAddActivity, onEditActivity, onDeleteActivity, currentDayIndex, onSelectDay }) {
+function TimelineView({ days, getActivities, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity, currentDayIndex, onSelectDay }) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ function TimelineView({ days, getActivities, onAddActivity, onEditActivity, onDe
                   activity={activity}
                   onEdit={() => onEditActivity(activity)}
                   onDelete={() => onDeleteActivity(activity.id)}
+                  onMove={() => onMoveActivity(activity)}
                 />
               ))}
               <button className="btn-add-sm" onClick={(e) => { e.stopPropagation(); onAddActivity(date); }}>+</button>

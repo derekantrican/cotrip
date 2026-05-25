@@ -96,3 +96,18 @@
   background: var(--danger);
   border-color: var(--danger);
 }
+
+.btn-open {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-open:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: white;
+}
