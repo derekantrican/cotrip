@@ -48,18 +48,20 @@ function TripView() {
     }
   }
 
-  async function loadTrip() {
+  async function loadTrip(preserveDay = false) {
     try {
       const data = await api.getTrip(id);
       setTrip(data);
 
-      // Set current day to today if within trip range
-      const today = new Date().toISOString().split('T')[0];
-      if (today >= data.start_date && today <= data.end_date) {
-        const start = new Date(data.start_date + 'T00:00:00');
-        const now = new Date(today + 'T00:00:00');
-        const dayIndex = Math.round((now - start) / (1000 * 60 * 60 * 24));
-        setCurrentDayIndex(dayIndex);
+      // Set current day to today only on initial load
+      if (!preserveDay) {
+        const today = new Date().toISOString().split('T')[0];
+        if (today >= data.start_date && today <= data.end_date) {
+          const start = new Date(data.start_date + 'T00:00:00');
+          const now = new Date(today + 'T00:00:00');
+          const dayIndex = Math.round((now - start) / (1000 * 60 * 60 * 24));
+          setCurrentDayIndex(dayIndex);
+        }
       }
     } catch (err) {
       console.error('Failed to load trip:', err);
@@ -94,7 +96,7 @@ function TripView() {
   async function handleCreateIdea(data) {
     try {
       await api.createActivity(data);
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to create idea:', err);
     }
@@ -103,7 +105,7 @@ function TripView() {
   async function handleScheduleIdea(idea, date) {
     try {
       await api.updateActivity(idea.id, { ...idea, date });
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to schedule idea:', err);
     }
@@ -113,7 +115,7 @@ function TripView() {
     try {
       await api.createActivity(data);
       setShowActivityForm(false);
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to create activity:', err);
     }
@@ -123,7 +125,7 @@ function TripView() {
     try {
       await api.updateActivity(editingActivity.id, data);
       setEditingActivity(null);
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to update activity:', err);
     }
@@ -133,7 +135,7 @@ function TripView() {
     if (!window.confirm('Delete this activity?')) return;
     try {
       await api.deleteActivity(activityId);
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to delete activity:', err);
     }
@@ -143,7 +145,7 @@ function TripView() {
     try {
       await api.updateActivity(activity.id, { ...activity, date: newDate });
       setMovingActivity(null);
-      loadTrip();
+      loadTrip(true);
     } catch (err) {
       console.error('Failed to move activity:', err);
     }
