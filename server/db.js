@@ -82,7 +82,7 @@ async function getDb() {
       created_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
     )`);
-    db.run('INSERT INTO activities_new SELECT * FROM activities');
+    db.run('INSERT INTO activities_new SELECT id, trip_id, date, end_date, start_time, end_time, COALESCE(title, \'Untitled\'), description, category, cover_image, link, map_link, sort_order, created_at FROM activities');
     db.run('DROP TABLE activities');
     db.run('ALTER TABLE activities_new RENAME TO activities');
   }
