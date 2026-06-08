@@ -89,10 +89,6 @@
   align-items: center;
 }
 
-.calendar-hotel-badge {
-  font-size: 0.7rem;
-}
-
 .calendar-day-col-body {
   position: relative;
   flex: 1;
@@ -123,6 +119,33 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+
+.calendar-event-time {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.75);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-day-hotels {
+  border-top: 1px solid #333;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.calendar-hotel-item {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 4px;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 3px;
+  border-left: 2px solid var(--cat-hotel);
 }
 
 /* FullTripView styles (reuses some calendar classes) */

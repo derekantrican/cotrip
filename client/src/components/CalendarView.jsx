@@ -4,14 +4,13 @@ import './CalendarView.css';
 
 function CalendarView({ days, getActivities, onSelectDay }) {
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(0);
-  const [startHour, setStartHour] = useState(6);
-  const [endHour, setEndHour] = useState(24);
+
+  const startHour = 0;
+  const endHour = 24;
 
   useEffect(() => {
     api.getSettings().then(settings => {
       if (settings.first_day_of_week === 'monday') setFirstDayOfWeek(1);
-      if (settings.calendar_start_hour !== undefined) setStartHour(settings.calendar_start_hour);
-      if (settings.calendar_end_hour !== undefined) setEndHour(settings.calendar_end_hour);
     }).catch(() => {});
   }, []);
 
@@ -91,6 +90,13 @@ function CalendarView({ days, getActivities, onSelectDay }) {
     return colors[cat] || colors.other;
   }
 
+  function formatTime(time) {
+    const [h, m] = time.split(':').map(Number);
+    const ampm = h >= 12 ? 'p' : 'a';
+    const hour = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return `${hour}:${m.toString().padStart(2, '0')}${ampm}`;
+  }
+
   return (
     <div className="calendar-view calendar-timeblock">
       <div className="calendar-header">
@@ -102,7 +108,7 @@ function CalendarView({ days, getActivities, onSelectDay }) {
           <div className="calendar-time-gutter">
             {HOURS.filter((_, i) => i % 3 === 0).map(h => (
               <div key={h} className="calendar-time-label" style={{ top: `${((h - startHour) / totalHours) * 100}%` }}>
-                {h === 0 ? '12a' : h < 12 ? `${h}a` : h === 12 ? '12p' : `${h - 12}p`}
+                {h === 0 ? '12:00a' : h < 12 ? `${h}:00a` : h === 12 ? '12:00p' : `${h - 12}:00p`}
               </div>
             ))}
           </div>
@@ -117,7 +123,6 @@ function CalendarView({ days, getActivities, onSelectDay }) {
               <div key={ci} className={`calendar-day-col ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}>
                 <div className="calendar-day-col-header">
                   {dateObj.getDate()}
-                  {hotels.length > 0 && <span className="calendar-hotel-badge" title={hotels[0].title}>🏨</span>}
                 </div>
                 <div className="calendar-day-col-body">
                   {activities.map(a => {
@@ -130,10 +135,26 @@ function CalendarView({ days, getActivities, onSelectDay }) {
                         title={`${a.title}${a.start_time ? ' (' + a.start_time + ')' : ''}`}
                       >
                         <span className="calendar-event-title">{a.title}</span>
+                        {(a.start_time || a.end_time) && (
+                          <span className="calendar-event-time">
+                            {a.start_time && formatTime(a.start_time)}
+                            {a.start_time && a.end_time && ' – '}
+                            {a.end_time && formatTime(a.end_time)}
+                          </span>
+                        )}
                       </div>
                     );
                   })}
                 </div>
+                {hotels.length > 0 && (
+                  <div className="calendar-day-hotels">
+                    {hotels.map(h => (
+                      <div key={h.id} className="calendar-hotel-item">
+                        🏨 {h.title}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
