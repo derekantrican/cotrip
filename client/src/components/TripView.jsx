@@ -6,6 +6,7 @@ import TimelineView from './TimelineView';
 import CalendarView from './CalendarView';
 import FullTripView from './FullTripView';
 import ActivityForm from './ActivityForm';
+import IdeasPanel from './IdeasPanel';
 import './TripView.css';
 
 function TripView() {
@@ -82,7 +83,30 @@ function TripView() {
 
   function getActivitiesForDate(date) {
     if (!trip || !trip.activities) return [];
-    return trip.activities.filter(a => a.date === date || (a.end_date && a.date <= date && a.end_date >= date));
+    return trip.activities.filter(a => a.date && (a.date === date || (a.end_date && a.date <= date && a.end_date >= date)));
+  }
+
+  function getIdeas() {
+    if (!trip || !trip.activities) return [];
+    return trip.activities.filter(a => !a.date);
+  }
+
+  async function handleCreateIdea(data) {
+    try {
+      await api.createActivity(data);
+      loadTrip();
+    } catch (err) {
+      console.error('Failed to create idea:', err);
+    }
+  }
+
+  async function handleScheduleIdea(idea, date) {
+    try {
+      await api.updateActivity(idea.id, { ...idea, date });
+      loadTrip();
+    } catch (err) {
+      console.error('Failed to schedule idea:', err);
+    }
   }
 
   async function handleCreateActivity(data) {
@@ -182,7 +206,19 @@ function TripView() {
         </div>
       )}
 
-      <div className="trip-view-content" onTouchStart={isMobile ? handleTouchStart : undefined} onTouchEnd={isMobile ? handleTouchEnd : undefined}>
+      <div className="trip-view-body">
+        {!isMobile && (
+          <IdeasPanel
+            ideas={getIdeas()}
+            tripId={trip.id}
+            days={days}
+            onCreateIdea={handleCreateIdea}
+            onEditIdea={setEditingActivity}
+            onDeleteIdea={handleDeleteActivity}
+            onScheduleIdea={handleScheduleIdea}
+          />
+        )}
+        <div className="trip-view-content" onTouchStart={isMobile ? handleTouchStart : undefined} onTouchEnd={isMobile ? handleTouchEnd : undefined}>
         {(isMobile || viewMode === 'day') && (
           <DayView
             date={currentDate}
@@ -223,6 +259,7 @@ function TripView() {
             onSelectDay={(i) => { setCurrentDayIndex(i); setViewMode('day'); }}
           />
         )}
+      </div>
       </div>
 
       {showActivityForm && (

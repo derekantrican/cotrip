@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const trip = get('SELECT * FROM trips WHERE id = ?', [req.params.id]);
   if (!trip) return res.status(404).json({ error: 'Trip not found' });
-  const activities = all('SELECT * FROM activities WHERE trip_id = ? ORDER BY date, COALESCE(end_date, date), start_time, sort_order', [req.params.id]);
+  const activities = all('SELECT * FROM activities WHERE trip_id = ? ORDER BY COALESCE(date, "9999-99-99"), COALESCE(end_date, date), start_time, sort_order', [req.params.id]);
   res.json({ ...trip, activities });
 });
 

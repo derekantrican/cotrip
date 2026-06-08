@@ -38,7 +38,7 @@ async function getDb() {
     CREATE TABLE IF NOT EXISTS activities (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       trip_id INTEGER NOT NULL,
-      date TEXT NOT NULL,
+      date TEXT,
       end_date TEXT,
       start_time TEXT,
       end_time TEXT,
@@ -60,6 +60,31 @@ async function getDb() {
   }
   if (!activityColumns.some((column) => column.name === 'map_link')) {
     db.run('ALTER TABLE activities ADD COLUMN map_link TEXT');
+  }
+
+  // Migration: allow null date (for ideas)
+  const dateCol = activityColumns.find(c => c.name === 'date');
+  if (dateCol && dateCol.notnull === 1) {
+    db.run(`CREATE TABLE activities_new (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      trip_id INTEGER NOT NULL,
+      date TEXT,
+      end_date TEXT,
+      start_time TEXT,
+      end_time TEXT,
+      title TEXT NOT NULL,
+      description TEXT,
+      category TEXT DEFAULT 'other',
+      cover_image TEXT,
+      link TEXT,
+      map_link TEXT,
+      sort_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
+    )`);
+    db.run('INSERT INTO activities_new SELECT * FROM activities');
+    db.run('DROP TABLE activities');
+    db.run('ALTER TABLE activities_new RENAME TO activities');
   }
 
   db.run(`

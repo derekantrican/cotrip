@@ -20,12 +20,12 @@ router.get('/trips/:tripId/activities', (req, res) => {
 // POST /api/activities — create activity
 router.post('/activities', (req, res) => {
   const { trip_id, date, end_date, start_time, end_time, title, description, category, cover_image, link, map_link, sort_order } = req.body;
-  if (!trip_id || !date || !title) {
-    return res.status(400).json({ error: 'trip_id, date, and title are required' });
+  if (!trip_id || !title) {
+    return res.status(400).json({ error: 'trip_id and title are required' });
   }
   const result = run(
     'INSERT INTO activities (trip_id, date, end_date, start_time, end_time, title, description, category, cover_image, link, map_link, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [trip_id, date, end_date || null, start_time || null, end_time || null, title, description || null, category || 'other', cover_image || null, link || null, map_link || null, sort_order || 0]
+    [trip_id, date || null, end_date || null, start_time || null, end_time || null, title, description || null, category || 'other', cover_image || null, link || null, map_link || null, sort_order || 0]
   );
   const activity = get('SELECT * FROM activities WHERE id = ?', [result.lastInsertRowid]);
   res.status(201).json(activity);
