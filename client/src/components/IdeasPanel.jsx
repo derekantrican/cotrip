@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import ActivityCard from './ActivityCard';
 import './IdeasPanel.css';
 
-function IdeasPanel({ ideas, tripId, days, onCreateIdea, onEditIdea, onDeleteIdea, onScheduleIdea }) {
+function IdeasPanel({ ideas, tripId, days, onCreateIdea, onEditIdea, onDeleteIdea, onScheduleIdea, onDropToIdeas }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('other');
@@ -50,7 +51,11 @@ function IdeasPanel({ ideas, tripId, days, onCreateIdea, onEditIdea, onDeleteIde
   }
 
   return (
-    <div className={`ideas-panel ${collapsed ? 'collapsed' : ''}`}>
+    <div className={`ideas-panel ${collapsed ? 'collapsed' : ''} ${dragOver ? 'drag-over' : ''}`}
+      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={(e) => { e.preventDefault(); setDragOver(false); try { const a = JSON.parse(e.dataTransfer.getData('application/json')); if (a.date && onDropToIdeas) onDropToIdeas(a); } catch(err){} }}
+    >
       <button className="ideas-panel-toggle" onClick={() => setCollapsed(!collapsed)}>
         {collapsed ? '💡›' : '‹💡'}
       </button>

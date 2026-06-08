@@ -1,7 +1,7 @@
 import React from 'react';
 import './CalendarView.css';
 
-function FullTripView({ days, getActivities, allActivities, onSelectDay }) {
+function FullTripView({ days, getActivities, allActivities, onSelectDay, onDropOnDate }) {
   const cells = days.map((date, index) => ({ date, index }));
   while (cells.length % 7 !== 0) cells.push(null);
 
@@ -26,7 +26,10 @@ function FullTripView({ days, getActivities, allActivities, onSelectDay }) {
           const regularActivities = activities.filter(a => a.category !== 'hotel');
 
           return (
-            <div key={i} className={`calendar-cell ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}>
+            <div key={i} className={`calendar-cell ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}
+              onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+              onDrop={(e) => { e.preventDefault(); try { const a = JSON.parse(e.dataTransfer.getData('application/json')); if (a.date !== cell.date && onDropOnDate) onDropOnDate(a, cell.date); } catch(err){} }}
+            >
               <div className="calendar-cell-date">Day {cell.index + 1}</div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
               {lastNightHotels.length > 0 && (

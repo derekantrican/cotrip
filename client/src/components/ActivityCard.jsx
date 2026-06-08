@@ -10,7 +10,7 @@ const CATEGORY_LABELS = {
   other: '📌 Other',
 };
 
-function ActivityCard({ activity, onEdit, onDelete, onMove }) {
+function ActivityCard({ activity, onEdit, onDelete, onMove, compact }) {
   const [expanded, setExpanded] = useState(false);
 
   function formatTime(time) {
@@ -22,12 +22,23 @@ function ActivityCard({ activity, onEdit, onDelete, onMove }) {
     return `${h12}:${m} ${ampm}`;
   }
 
+  function handleDragStart(e) {
+    e.dataTransfer.setData('application/json', JSON.stringify(activity));
+    e.dataTransfer.effectAllowed = 'move';
+    e.stopPropagation();
+  }
+
   const timeStr = activity.start_time
     ? `${formatTime(activity.start_time)}${activity.end_time ? ' – ' + formatTime(activity.end_time) : ''}`
     : '';
 
   return (
-    <div className={`activity-card category-${activity.category || 'other'}`} onClick={() => setExpanded(!expanded)}>
+    <div
+      className={`activity-card category-${activity.category || 'other'}`}
+      onClick={() => setExpanded(!expanded)}
+      draggable
+      onDragStart={handleDragStart}
+    >
       {activity.cover_image && (
         <div className="activity-card-image" style={{ backgroundImage: `url(${activity.cover_image})` }} />
       )}

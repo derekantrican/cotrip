@@ -39,7 +39,7 @@ router.put('/activities/:id', (req, res) => {
   run(
     'UPDATE activities SET date = ?, end_date = ?, start_time = ?, end_time = ?, title = ?, description = ?, category = ?, cover_image = ?, link = ?, map_link = ?, sort_order = ? WHERE id = ?',
     [
-      date || existing.date, end_date !== undefined ? (end_date || null) : existing.end_date,
+      date !== undefined ? date : existing.date, end_date !== undefined ? (end_date || null) : existing.end_date,
       start_time !== undefined ? start_time : existing.start_time, end_time !== undefined ? end_time : existing.end_time,
       title || existing.title, description !== undefined ? description : existing.description, category || existing.category,
       cover_image !== undefined ? cover_image : existing.cover_image, link !== undefined ? link : existing.link,

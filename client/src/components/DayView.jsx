@@ -2,7 +2,7 @@ import React from 'react';
 import ActivityCard from './ActivityCard';
 import './DayView.css';
 
-function DayView({ date, activities, allActivities, days, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity }) {
+function DayView({ date, activities, allActivities, days, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity, onDropOnDate }) {
   const dayIndex = days ? days.indexOf(date) : -1;
   const prevDate = dayIndex > 0 ? days[dayIndex - 1] : null;
 
@@ -20,8 +20,23 @@ function DayView({ date, activities, allActivities, days, onAddActivity, onEditA
   // Regular activities (non-hotel)
   const regularActivities = activities.filter(a => a.category !== 'hotel');
 
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    try {
+      const activity = JSON.parse(e.dataTransfer.getData('application/json'));
+      if (activity.date !== date && onDropOnDate) {
+        onDropOnDate(activity, date);
+      }
+    } catch (err) {}
+  }
+
   return (
-    <div className="day-view">
+    <div className="day-view" onDragOver={handleDragOver} onDrop={handleDrop}>
       {lastNightHotels.length > 0 && (
         <div className="day-hotel-section day-hotel-top">
           {lastNightHotels.map(activity => (

@@ -2,10 +2,15 @@
   background: var(--bg-surface);
   border-radius: var(--radius);
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.15s;
+  cursor: grab;
+  transition: transform 0.15s, opacity 0.15s;
   border-left: 4px solid var(--cat-other);
   box-shadow: var(--shadow);
+}
+
+.activity-card:active {
+  cursor: grabbing;
+  opacity: 0.7;
 }
 
 .activity-card:hover {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import './CalendarView.css';
 
-function CalendarView({ days, getActivities, onSelectDay }) {
+function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(0);
 
   const startHour = 0;
@@ -120,7 +120,10 @@ function CalendarView({ days, getActivities, onSelectDay }) {
             const dateObj = new Date(cell.date + 'T00:00:00');
             const isToday = cell.date === new Date().toISOString().split('T')[0];
             return (
-              <div key={ci} className={`calendar-day-col ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}>
+              <div key={ci} className={`calendar-day-col ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}
+                onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+                onDrop={(e) => { e.preventDefault(); e.stopPropagation(); try { const a = JSON.parse(e.dataTransfer.getData('application/json')); if (a.date !== cell.date && onDropOnDate) onDropOnDate(a, cell.date); } catch(err){} }}
+              >
                 <div className="calendar-day-col-header">
                   {dateObj.getDate()}
                 </div>

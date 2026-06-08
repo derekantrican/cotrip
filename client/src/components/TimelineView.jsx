@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import ActivityCard from './ActivityCard';
 import './TimelineView.css';
 
-function TimelineView({ days, getActivities, allActivities, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity, currentDayIndex, onSelectDay }) {
+function TimelineView({ days, getActivities, allActivities, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity, currentDayIndex, onSelectDay, onDropOnDate }) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -33,7 +33,10 @@ function TimelineView({ days, getActivities, allActivities, onAddActivity, onEdi
         const regularActivities = activities.filter(a => a.category !== 'hotel');
 
         return (
-          <div key={date} className={`timeline-column ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(index)}>
+          <div key={date} className={`timeline-column ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(index)}
+            onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+            onDrop={(e) => { e.preventDefault(); try { const a = JSON.parse(e.dataTransfer.getData('application/json')); if (a.date !== date && onDropOnDate) onDropOnDate(a, date); } catch(err){} }}
+          >
             <div className="timeline-column-header">
               <span className="timeline-day-num">Day {index + 1}</span>
               <span className="timeline-day-label">{label}</span>

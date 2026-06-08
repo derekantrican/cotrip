@@ -151,6 +151,24 @@ function TripView() {
     }
   }
 
+  async function handleDropOnDate(activityData, date) {
+    try {
+      await api.updateActivity(activityData.id, { ...activityData, date });
+      loadTrip(true);
+    } catch (err) {
+      console.error('Failed to drop activity:', err);
+    }
+  }
+
+  async function handleDropToIdeas(activityData) {
+    try {
+      await api.updateActivity(activityData.id, { ...activityData, date: null, start_time: null, end_time: null });
+      loadTrip(true);
+    } catch (err) {
+      console.error('Failed to move to ideas:', err);
+    }
+  }
+
   function handlePrevDay() {
     setCurrentDayIndex(i => Math.max(0, i - 1));
   }
@@ -218,6 +236,7 @@ function TripView() {
             onEditIdea={setEditingActivity}
             onDeleteIdea={handleDeleteActivity}
             onScheduleIdea={handleScheduleIdea}
+            onDropToIdeas={handleDropToIdeas}
           />
         )}
         <div className="trip-view-content" onTouchStart={isMobile ? handleTouchStart : undefined} onTouchEnd={isMobile ? handleTouchEnd : undefined}>
@@ -231,6 +250,7 @@ function TripView() {
             onEditActivity={setEditingActivity}
             onDeleteActivity={handleDeleteActivity}
             onMoveActivity={setMovingActivity}
+            onDropOnDate={handleDropOnDate}
           />
         )}
         {!isMobile && viewMode === 'timeline' && (
@@ -244,6 +264,7 @@ function TripView() {
             onMoveActivity={setMovingActivity}
             currentDayIndex={currentDayIndex}
             onSelectDay={setCurrentDayIndex}
+            onDropOnDate={handleDropOnDate}
           />
         )}
         {!isMobile && viewMode === 'calendar' && (
@@ -251,6 +272,7 @@ function TripView() {
             days={days}
             getActivities={getActivitiesForDate}
             onSelectDay={(i) => { setCurrentDayIndex(i); setViewMode('day'); }}
+            onDropOnDate={handleDropOnDate}
           />
         )}
         {!isMobile && viewMode === 'trip' && (
@@ -259,6 +281,7 @@ function TripView() {
             getActivities={getActivitiesForDate}
             allActivities={trip.activities}
             onSelectDay={(i) => { setCurrentDayIndex(i); setViewMode('day'); }}
+            onDropOnDate={handleDropOnDate}
           />
         )}
       </div>
