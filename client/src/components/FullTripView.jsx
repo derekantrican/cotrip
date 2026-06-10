@@ -1,4 +1,5 @@
 import React from 'react';
+import { getLocalToday } from '../utils/dateUtils';
 import './CalendarView.css';
 
 function FullTripView({ days, getActivities, allActivities, onSelectDay, onDropOnDate }) {
@@ -12,7 +13,7 @@ function FullTripView({ days, getActivities, allActivities, onSelectDay, onDropO
           if (!cell) return <div key={i} className="calendar-cell empty" />;
           const activities = getActivities(cell.date);
           const dateObj = new Date(cell.date + 'T00:00:00');
-          const isToday = cell.date === new Date().toISOString().split('T')[0];
+          const isToday = cell.date === getLocalToday();
           const label = dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
           const prevDate = cell.index > 0 ? days[cell.index - 1] : null;

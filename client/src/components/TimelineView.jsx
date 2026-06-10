@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import ActivityCard from './ActivityCard';
+import { getLocalToday } from '../utils/dateUtils';
 import './TimelineView.css';
 
 function TimelineView({ days, getActivities, allActivities, onAddActivity, onEditActivity, onDeleteActivity, onMoveActivity, currentDayIndex, onSelectDay, onDropOnDate }) {
@@ -20,7 +21,7 @@ function TimelineView({ days, getActivities, allActivities, onAddActivity, onEdi
         const activities = getActivities(date);
         const dateObj = new Date(date + 'T00:00:00');
         const label = dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-        const isToday = date === new Date().toISOString().split('T')[0];
+        const isToday = date === getLocalToday();
 
         const prevDate = index > 0 ? days[index - 1] : null;
         const tonightHotels = activities.filter(a => a.category === 'hotel' && a.date === date);

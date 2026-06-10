@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { getLocalToday, formatLocalDate } from '../utils/dateUtils';
 import DayView from './DayView';
 import TimelineView from './TimelineView';
 import CalendarView from './CalendarView';
@@ -55,7 +56,7 @@ function TripView() {
 
       // Set current day to today only on initial load
       if (!preserveDay) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalToday();
         if (today >= data.start_date && today <= data.end_date) {
           const start = new Date(data.start_date + 'T00:00:00');
           const now = new Date(today + 'T00:00:00');
@@ -77,7 +78,7 @@ function TripView() {
     const end = new Date(trip.end_date + 'T00:00:00');
     let current = new Date(start);
     while (current <= end) {
-      days.push(current.toISOString().split('T')[0]);
+      days.push(formatLocalDate(current));
       current.setDate(current.getDate() + 1);
     }
     return days;

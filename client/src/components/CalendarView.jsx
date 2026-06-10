@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
+import { getLocalToday } from '../utils/dateUtils';
 import './CalendarView.css';
 
 function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
@@ -118,7 +119,7 @@ function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
             const activities = allDayActivities.filter(a => a.category !== 'hotel');
             const hotels = allDayActivities.filter(a => a.category === 'hotel');
             const dateObj = new Date(cell.date + 'T00:00:00');
-            const isToday = cell.date === new Date().toISOString().split('T')[0];
+            const isToday = cell.date === getLocalToday();
             return (
               <div key={ci} className={`calendar-day-col ${isToday ? 'today' : ''}`} onClick={() => onSelectDay(cell.index)}
                 onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}

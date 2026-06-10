@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api';
+import { getLocalToday } from '../utils/dateUtils';
 import TripCard from './TripCard';
 import TripForm from './TripForm';
 import './TripList.css';
@@ -23,7 +24,7 @@ function TripList() {
 
       // Auto-navigate to active trip only on first visit (not when user clicked "back")
       if (!searchParams.has('list')) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalToday();
         const activeTrip = data.find(t => t.start_date <= today && t.end_date >= today);
         if (activeTrip) {
           navigate(`/trip/${activeTrip.id}`);
