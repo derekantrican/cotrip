@@ -107,11 +107,14 @@ function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
       {weeks.map((week, wi) => (
         <div key={wi} className="calendar-week-row">
           <div className="calendar-time-gutter">
-            {HOURS.filter((_, i) => i % 3 === 0).map(h => (
-              <div key={h} className="calendar-time-label" style={{ top: `${((h - startHour) / totalHours) * 100}%` }}>
-                {h === 0 ? '12:00a' : h < 12 ? `${h}:00a` : h === 12 ? '12:00p' : `${h - 12}:00p`}
-              </div>
-            ))}
+            <div className="calendar-time-gutter-header"></div>
+            <div className="calendar-time-gutter-body">
+              {HOURS.filter((_, i) => i % 3 === 0).map(h => (
+                <div key={h} className="calendar-time-label" style={{ top: `${((h - startHour) / totalHours) * 100}%` }}>
+                  {h === 0 ? '12:00a' : h < 12 ? `${h}:00a` : h === 12 ? '12:00p' : `${h - 12}:00p`}
+                </div>
+              ))}
+            </div>
           </div>
           {week.map((cell, ci) => {
             if (!cell) return <div key={ci} className="calendar-day-col empty" />;
