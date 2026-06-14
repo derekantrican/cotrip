@@ -200,7 +200,7 @@ function TripView() {
   return (
     <div className="trip-view">
       <header className="trip-view-header">
-        <button className="btn-back" onClick={() => navigate('/?list')}>← Trips</button>
+        <button className="btn-back" onClick={() => navigate('/?list')}>‹ Trips</button>
         <h1>{trip.title}</h1>
         {!isMobile && (
           <div className="view-mode-toggle">
