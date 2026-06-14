@@ -115,6 +115,7 @@ function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
                 </div>
               ))}
             </div>
+            <div className="calendar-time-gutter-footer">🏨</div>
           </div>
           {week.map((cell, ci) => {
             if (!cell) return <div key={ci} className="calendar-day-col empty" />;
@@ -153,15 +154,13 @@ function CalendarView({ days, getActivities, onSelectDay, onDropOnDate }) {
                     );
                   })}
                 </div>
-                {hotels.length > 0 && (
-                  <div className="calendar-day-hotels">
-                    {hotels.map(h => (
-                      <div key={h.id} className="calendar-hotel-item">
-                        🏨 {h.title}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="calendar-day-hotels">
+                  {hotels.map(h => (
+                    <div key={h.id} className="calendar-hotel-item">
+                      🏨 {h.title}
+                    </div>
+                  ))}
+                </div>
               </div>
             );
           })}
